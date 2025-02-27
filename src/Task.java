@@ -5,8 +5,17 @@ public class Task {
     private String name;
     private String description;
     private Status status;
+    private static int counter = 0;
 
     //Конструктор для создания новой задачи
+    public Task(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.taskId = ++counter;
+        status = Status.NEW;
+    }
+
+    //Конструктор для обновления эпика
     public Task(int taskId, String name, String description) {
         this.name = name;
         this.description = description;
