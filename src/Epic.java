@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Epic extends Task {
-    public List<Integer> childTasksIds = new ArrayList<>();
+    private List<Integer> childTasksIds = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description);
@@ -31,5 +31,9 @@ public class Epic extends Task {
         return "Epic{" +
                 "childTasksIds=" + childTasksIds +
                 "} " + super.toString();
+    }
+
+    public List<Integer> getChildTasksIds() {
+        return childTasksIds;
     }
 }
