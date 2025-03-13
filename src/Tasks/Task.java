@@ -1,3 +1,5 @@
+package Tasks;
+
 import java.util.Objects;
 
 public class Task {
@@ -31,6 +33,10 @@ public class Task {
         this.status = status;
     }
 
+    public static void setCounter(int counter) {
+        Task.counter = counter;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -47,7 +53,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "Tasks.Task{" +
                 "Id=" + taskId +
                 ", Название:'" + name + '\'' +
                 ", Описание:'" + description + '\'' +
