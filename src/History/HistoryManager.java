@@ -1,6 +1,6 @@
 package History;
 
-import Tasks.*;
+import Tasks.Task;
 
 import java.util.List;
 

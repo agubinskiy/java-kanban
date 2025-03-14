@@ -1,6 +1,6 @@
 import Tasks.*;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ class InMemoryTaskManagerTest {
         assertNotNull(savedEpic, "Эпик не найден.");
         assertEquals(epic, savedEpic, "Эпики не совпадают.");
 
-        final ArrayList<Epic> epics = taskManager.getAllEpics();
+        final List<Epic> epics = taskManager.getAllEpics();
 
         assertNotNull(epics, "Эпики не возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество эпиков.");
@@ -63,12 +63,12 @@ class InMemoryTaskManagerTest {
         assertNotNull(savedSubtask, "Подзадача не найдена.");
         assertEquals(subtask, savedSubtask, "Подзадачи не совпадают.");
 
-        final ArrayList<Subtask> subtasks = taskManager.getAllSubtasks();
+        final List<Subtask> subtasks = taskManager.getAllSubtasks();
 
         assertNotNull(subtasks, "Подзадачи не возвращаются.");
         assertEquals(1, subtasks.size(), "Неверное количество подзадач.");
         assertEquals(subtask, subtasks.get(0), "Подзадачи не совпадают.");
-        assertEquals(subtasks, taskManager.getEpicSubtasks(1), "Список подзадач эпика некорректен");
+        Assertions.assertEquals(subtasks, taskManager.getEpicSubtasks(1), "Список подзадач эпика некорректен");
     }
 
     //Подзадачу нельзя добавить в задачу или в подзадачу
@@ -81,12 +81,12 @@ class InMemoryTaskManagerTest {
         taskManager.createSubtask(subtask1);
 
         assertNull(taskManager.getSubtask(2));
-        assertEquals(new ArrayList<Subtask>(), taskManager.getAllSubtasks());
+        Assertions.assertEquals(new ArrayList<Subtask>(), taskManager.getAllSubtasks());
 
         taskManager.createSubtask(subtask2);
 
         assertNull(taskManager.getSubtask(2));
-        assertEquals(new ArrayList<Subtask>(), taskManager.getAllSubtasks());
+        Assertions.assertEquals(new ArrayList<Subtask>(), taskManager.getAllSubtasks());
     }
 
     //Обновление задачи
@@ -149,8 +149,8 @@ class InMemoryTaskManagerTest {
         assertNotNull(subtasks, "Подзадачи не возвращаются.");
         assertEquals(1, subtasks.size(), "Неверное количество подзадач.");
         assertEquals(updatedSubtask, subtasks.get(0), "Подзадачи не совпадают.");
-        assertEquals(subtasks, taskManager.getEpicSubtasks(2), "Список подзадач эпика некорректен");
-        assertNotEquals(subtasks, taskManager.getEpicSubtasks(1), "Список подзадач эпика некорректен");
+        Assertions.assertEquals(subtasks, taskManager.getEpicSubtasks(2), "Список подзадач эпика некорректен");
+        Assertions.assertNotEquals(subtasks, taskManager.getEpicSubtasks(1), "Список подзадач эпика некорректен");
     }
 
     @Test
@@ -166,12 +166,12 @@ class InMemoryTaskManagerTest {
         final List<Task> tasks = taskManager.getAllTasks();
 
         assertEquals(2, tasks.size(), "Неверное количество задач.");
-        assertNull(taskManager.getTask(2), "Задача не удалена");
-        assertEquals(taskManager.getTask(3), tasks.get(1), "Задачи не совпадают.");
+        Assertions.assertNull(taskManager.getTask(2), "Задача не удалена");
+        Assertions.assertEquals(taskManager.getTask(3), tasks.get(1), "Задачи не совпадают.");
 
         taskManager.removeAllTasks();
 
-        assertEquals(taskManager.getAllTasks(), new ArrayList<Task>(), "Задачи не удалены.");
+        Assertions.assertEquals(taskManager.getAllTasks(), new ArrayList<Task>(), "Задачи не удалены.");
     }
 
     @Test
@@ -193,14 +193,14 @@ class InMemoryTaskManagerTest {
 
         assertEquals(2, epics.size(), "Неверное количество эпиков.");
         assertEquals(1, subtasks.size(), "Неверное количество подзадач.");
-        assertNull(taskManager.getEpic(2), "Эпик не удален");
-        assertEquals(taskManager.getEpic(3), epics.get(1), "Эпики не совпадают.");
-        assertNull(taskManager.getSubtask(5), "Подзадача не удалена");
+        Assertions.assertNull(taskManager.getEpic(2), "Эпик не удален");
+        Assertions.assertEquals(taskManager.getEpic(3), epics.get(1), "Эпики не совпадают.");
+        Assertions.assertNull(taskManager.getSubtask(5), "Подзадача не удалена");
 
         taskManager.removeAllEpics();
 
-        assertEquals(taskManager.getAllEpics(), new ArrayList<Epic>(), "Эпики не удалены.");
-        assertEquals(taskManager.getAllSubtasks(), new ArrayList<Subtask>(), "Подзадачи не удалены.");
+        Assertions.assertEquals(taskManager.getAllEpics(), new ArrayList<Epic>(), "Эпики не удалены.");
+        Assertions.assertEquals(taskManager.getAllSubtasks(), new ArrayList<Subtask>(), "Подзадачи не удалены.");
     }
 
     @Test
@@ -220,13 +220,13 @@ class InMemoryTaskManagerTest {
         final List<Subtask> subtasks = taskManager.getAllSubtasks();
 
         assertEquals(2, subtasks.size(), "Неверное количество подзадач.");
-        assertEquals(taskManager.getEpicSubtasks(1), new ArrayList<Subtask>(), "Подзадача не удалена");
+        Assertions.assertEquals(taskManager.getEpicSubtasks(1), new ArrayList<Subtask>(), "Подзадача не удалена");
         assertEquals(epic1.getChildTasksIds(), new ArrayList<Integer>(), "Подзадача не удалена");
 
         taskManager.removeAllSubtasks();
 
-        assertEquals(taskManager.getAllSubtasks(), new ArrayList<Subtask>(), "Подзадачи не удалены.");
-        assertEquals(taskManager.getEpicSubtasks(2), new ArrayList<Subtask>(), "Подзадачи не удалены");
+        Assertions.assertEquals(taskManager.getAllSubtasks(), new ArrayList<Subtask>(), "Подзадачи не удалены.");
+        Assertions.assertEquals(taskManager.getEpicSubtasks(2), new ArrayList<Subtask>(), "Подзадачи не удалены");
     }
 
     @Test
@@ -274,6 +274,6 @@ class InMemoryTaskManagerTest {
         taskManager.getTask(1);
         taskManager.updateTask(task2);
 
-        assertEquals(tasks, taskManager.getHistory(), "История просмотра некорректна");
+        Assertions.assertEquals(tasks, taskManager.getHistory(), "История просмотра некорректна");
     }
 }
