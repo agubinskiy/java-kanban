@@ -20,18 +20,18 @@ public class InMemoryHistoryManager implements HistoryManager{
     @Override
     public void add(Task task) {
         int taskId = task.getTaskId();
-        if(tasksLinkedMap.containsKey(taskId)) { //Если в истории уже есть эта задача
+        if (tasksLinkedMap.containsKey(taskId)) { //Если в истории уже есть эта задача
             remoteNode(tasksLinkedMap.get(taskId));
         }
         linkLast(task);
-        if(tail == null)
+        if (tail == null)
             tasksLinkedMap.put(taskId, head);
          else
             tasksLinkedMap.put(taskId, tail);
     }
 
     public void remove(int id) {
-        if(tasksLinkedMap.containsKey(id)) {
+        if (tasksLinkedMap.containsKey(id)) {
             Node node = tasksLinkedMap.get(id);
             tasksLinkedMap.remove(id);
             remoteNode(node);
@@ -56,9 +56,9 @@ public class InMemoryHistoryManager implements HistoryManager{
     private List<Task> getTasks () {
         List<Task> tasks = new ArrayList<>();
         Node node = head;
-        if(node != null) {
+        if (node != null) {
             tasks.add(node.getData());
-            while(node.getNext() != null) {
+            while (node.getNext() != null) {
                 node = node.getNext();
                 tasks.add(node.getData());
             }
@@ -69,7 +69,7 @@ public class InMemoryHistoryManager implements HistoryManager{
     private void remoteNode(Node node) {
         if (node == head) {
             if (tail != null) { //Если есть узлы, кроме головы
-                if(node.getNext() != tail) {
+                if (node.getNext() != tail) {
                     Node nextNode = node.getNext();
                     nextNode.setPrev(null);
                     head = nextNode;
