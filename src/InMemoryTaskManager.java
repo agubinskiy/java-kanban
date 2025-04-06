@@ -151,6 +151,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void removeTask(int taskId) {
         if(tasks.containsKey(taskId)) {
             tasks.remove(taskId);
+            historyManager.remove(taskId);
             System.out.println("Задача удалена");
         } else {
             System.out.println("Не найдено задачи с таким идентификатором");
@@ -163,8 +164,10 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epics.get(epicId);
             for(int childTaskId: epic.getChildTasksIds()) { //Удаляем все связанные с эпиком подзадачи
                 subtasks.remove(childTaskId);
+                historyManager.remove(childTaskId);
             }
             epics.remove(epicId); //Удаляем сам эпик
+            historyManager.remove(epicId);
             System.out.println("Эпик удалён");
         } else {
             System.out.println("Не найдено эпика с таким идентификатором");
@@ -181,6 +184,7 @@ public class InMemoryTaskManager implements TaskManager {
             subtasks.remove(subtaskId);
             epic.setStatus(epicCheckStatus(epic)); //Обновили статус эпика
             System.out.println("Подзадача удалена");
+            historyManager.remove(subtaskId);
         } else {
             System.out.println("Не найдено подзадачи с таким идентификатором");
         }
@@ -188,6 +192,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllTasks() {
+        for(Integer id: tasks.keySet()) {
+            historyManager.remove(id);
+        }
         tasks.clear();
         System.out.println("Все задачи удалены");
     }
@@ -197,6 +204,12 @@ public class InMemoryTaskManager implements TaskManager {
         for(Epic epic: epics.values()) {
             epic.getChildTasksIds().clear();
         }
+        for(Integer id: subtasks.keySet()) {
+            historyManager.remove(id);
+        }
+        for(Integer id: epics.keySet()) {
+            historyManager.remove(id);
+        }
         subtasks.clear();
         epics.clear();
         System.out.println("Все эпики удалены");
@@ -204,6 +217,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeAllSubtasks() {
+        for(Integer id: subtasks.keySet()) {
+            historyManager.remove(id);
+        }
         subtasks.clear();
         for(Epic epic: epics.values()) {
             epic.getChildTasksIds().clear();

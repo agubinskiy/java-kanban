@@ -19,18 +19,23 @@ public class Main {
         taskManager.createTask(task1);
         //System.out.println(taskManager.getTask(1));
         taskManager.createTask(task2);
-        taskManager.updateTask(task3);
+        //taskManager.updateTask(task3);
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
         taskManager.createSubtask(subtask1);
-        taskManager.createSubtask(subtask2);
-        taskManager.updateSubtask(subtask3);
+        //taskManager.createSubtask(subtask2);
+        //taskManager.updateSubtask(subtask3);
 
-        //System.out.println(taskManager.getTask(1));
-        System.out.println(taskManager.getAllEpics());
-        System.out.println(taskManager.getAllSubtasks());
-        System.out.println(taskManager.getEpicSubtasks(4));
-        //System.out.println(taskManager.getTask(2));
+        System.out.println(taskManager.getTask(2));
+        System.out.println(taskManager.getTask(1));
+        System.out.println(taskManager.getEpic(3));
+        System.out.println(taskManager.getSubtask(5));
+        //System.out.println(taskManager.getAllEpics());
+        //System.out.println(taskManager.getAllSubtasks());
+        //System.out.println(taskManager.getEpicSubtasks(4));
+        System.out.println(taskManager.getSubtask(5));
+
+        taskManager.removeAllEpics();
 
         for(Task task: taskManager.getHistory()) {
             System.out.println(task);
