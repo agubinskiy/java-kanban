@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryHistoryManager implements HistoryManager{
-    private Map<Integer, Node> tasksLinkedMap= new HashMap<>();
+public class InMemoryHistoryManager implements HistoryManager {
+    private Map<Integer, Node> tasksLinkedMap = new HashMap<>();
     private Node head;
     private Node tail;
 
@@ -53,7 +53,7 @@ public class InMemoryHistoryManager implements HistoryManager{
         }
     }
 
-    private List<Task> getTasks () {
+    private List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
         Node node = head;
         if (node != null) {
@@ -73,7 +73,7 @@ public class InMemoryHistoryManager implements HistoryManager{
                     Node nextNode = node.getNext();
                     nextNode.setPrev(null);
                     head = nextNode;
-                } else {//Есть только голова и хвост
+                } else { //Есть только голова и хвост
                     head = tail;
                     head.setPrev(null);
                     tail = null;
