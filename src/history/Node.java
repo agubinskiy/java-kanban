@@ -9,7 +9,7 @@ public class Node {
     private Node prev;
     private Node next;
 
-    public Node (Task data) {
+    public Node(Task data) {
         this.data = data;
         this.prev = null;
         this.next = null;
