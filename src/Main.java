@@ -36,7 +36,7 @@ public class Main {
 
         taskManager.removeAllEpics();
 
-        for(Task task: taskManager.getHistory()) {
+        for (Task task: taskManager.getHistory()) {
             System.out.println(task);
         }
     }
