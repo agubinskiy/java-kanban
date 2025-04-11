@@ -1,4 +1,4 @@
-import Tasks.*;
+import tasks.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -6,14 +6,15 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class InMemoryTaskManagerTest {
     private TaskManager taskManager = Managers.getDefault();
 
     @AfterEach
-    public void beforeEach() {
+    public void AfterEach() {
         Task.setCounter(0);
     }
 
@@ -275,5 +276,100 @@ class InMemoryTaskManagerTest {
         taskManager.updateTask(task2);
 
         Assertions.assertEquals(tasks, taskManager.getHistory(), "История просмотра некорректна");
+    }
+
+    @Test
+    void shouldShowTasksInHistoryAfterRewriting() {
+        Task task1 = new Task("Test addNewTask1", "Test addNewTask1 description");
+        Task task2 = new Task("Test addNewTask2", "Test addNewTask2 description");
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        final List<Task> task1Task2 = List.of(task1, task2);
+        final List<Task> task2Task1 = List.of(task2, task1);
+
+        taskManager.getTask(1);
+        taskManager.getTask(2);
+
+        List<Task> history = taskManager.getHistory();
+
+        //Проверяем корректность истории
+        assertNotNull(history, "История пуста");
+        assertEquals(history, task1Task2, "История некорректна");
+
+        //Проверяем корректность истории после перезаписи последней записи
+        taskManager.getTask(2);
+        history = taskManager.getHistory();
+        assertEquals(history, task1Task2, "История некорректна");
+
+        //Проверяем корректность истории после перезаписи первой записи
+        taskManager.getTask(1);
+        history = taskManager.getHistory();
+        assertEquals(history, task2Task1, "История некорректна");
+    }
+
+    @Test
+    void shouldRemoveTaskFromHistoryAfterRemovingTask() {
+        Task task1 = new Task("Test addNewTask1", "Test addNewTask1 description");
+        Task task2 = new Task("Test addNewTask2", "Test addNewTask2 description");
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        final List<Task> listOfTask1 = List.of(task1);
+
+        taskManager.getTask(1);
+        taskManager.getTask(2);
+        taskManager.removeTask(2);
+        List<Task> history = taskManager.getHistory();
+
+        //Проверяем корректность истории
+        assertNotNull(history, "История пуста");
+        assertEquals(history, listOfTask1, "История некорректна");
+    }
+
+    @Test
+    void shouldRemoveEpicFromHistoryAfterRemovingEpic() {
+        Task task = new Task("Test addNewTask1", "Test addNewTask1 description");
+        Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description");
+        Subtask subtask = new Subtask("Test Subtask", "Test Subtask description", 2);
+        taskManager.createTask(task);
+        taskManager.createEpic(epic);
+        taskManager.createSubtask(subtask);
+        final List<Task> listOfTask = List.of(task);
+        final List<Task> listOfAllTasks = List.of(task, epic, subtask);
+
+        taskManager.getTask(1);
+        taskManager.getEpic(2);
+        taskManager.getSubtask(3);
+        List<Task> history = taskManager.getHistory();
+
+        //Проверяем корректность истории
+        assertNotNull(history, "История пуста");
+        assertEquals(history, listOfAllTasks, "История некорректна");
+
+        //Проверяем корректность истории после удаления эпика
+        taskManager.removeEpic(2);
+        history = taskManager.getHistory();
+        assertNotNull(history, "История пуста");
+        assertEquals(history, listOfTask, "История некорректна");
+    }
+
+    @Test
+    void shouldRemoveTaskFromHistoryAfterRemovingMiddleTask() {
+        Task task1 = new Task("Test addNewTask1", "Test addNewTask1 description");
+        Task task2 = new Task("Test addNewTask2", "Test addNewTask2 description");
+        Task task3 = new Task("Test addNewTask3", "Test addNewTask3 description");
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+        final List<Task> task1Task3 = List.of(task1, task3);
+
+        taskManager.getTask(1);
+        taskManager.getTask(2);
+        taskManager.getTask(3);
+        taskManager.removeTask(2);
+        List<Task> history = taskManager.getHistory();
+
+        //Проверяем корректность истории
+        assertNotNull(history, "История пуста");
+        assertEquals(history, task1Task3, "История некорректна");
     }
 }

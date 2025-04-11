@@ -1,5 +1,5 @@
-import History.HistoryManager;
-import History.InMemoryHistoryManager;
+import history.HistoryManager;
+import history.InMemoryHistoryManager;
 
 public class Managers {
     public static TaskManager getDefault() {
