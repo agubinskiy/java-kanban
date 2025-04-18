@@ -1,7 +1,6 @@
 import tasks.*;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -17,7 +16,8 @@ public class Main {
 
         Subtask subtask1 = new Subtask("Подзадача1", "Описание подзадачи1", 3);
         Subtask subtask2 = new Subtask("Подзадача2", "Описание подзадачи2", 4);
-        Subtask subtask3 = new Subtask(5,"Подзадача3", "Описание подзадачи3", 4, Status.DONE);
+        Subtask subtask3 = new Subtask(5, "Подзадача3", "Описание подзадачи3", 4,
+                Status.DONE);
 
         taskManager.createTask(task1);
         //System.out.println(taskManager.getTask(1));
@@ -41,7 +41,7 @@ public class Main {
         taskManager.createTask(task1);
 
         //taskManager.removeAllEpics();
-        for (Task task: taskManager.getHistory()) {
+        for (Task task : taskManager.getHistory()) {
             System.out.println(task);
         }
     }
