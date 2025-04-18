@@ -53,12 +53,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Tasks.Task{" +
-                "Id=" + taskId +
-                ", Название:'" + name + '\'' +
-                ", Описание:'" + description + '\'' +
-                ", Статус:" + status +
-                '}' + '\n';
+        return taskId +
+                "," + getClass().toString().substring(12).toUpperCase() +
+                "," + name +
+                "," + status +
+                "," + description +
+                ",";
     }
 
     public int getTaskId() {
