@@ -30,9 +30,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Tasks.Epic{" +
-                "childTasksIds=" + childTasksIds +
-                "} " + super.toString();
+        return super.toString();
     }
 
     public List<Integer> getChildTasksIds() {
