@@ -6,8 +6,6 @@ import java.nio.file.Paths;
 public class Main {
     public static void main(String[] args) throws IOException {
         TaskManager taskManager = Managers.getDefault();
-        taskManager = FileBackedTaskManager.loadFromFile(Paths.get(System.getProperty("user.home"),
-                "testFile.txt").toFile());
 
 
         Task task1 = new Task("Задача1", "Описание задачи1");
