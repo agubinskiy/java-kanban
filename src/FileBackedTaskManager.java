@@ -3,6 +3,7 @@ import tasks.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     public File fileOfTasks;
@@ -40,20 +41,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             int maxId = 0;
             for (int i = 1; i < split.length; i++) {
                 Task newTask = fileBackedTaskManager.fromString(split[i]);
-                if (newTask instanceof Subtask) {
-                    int epicId = ((Subtask) newTask).getEpicId();
-                    subtasks.put(newTask.getTaskId(), (Subtask) newTask);
-                    if (epics.containsKey(epicId)) {
-                        subtasks.put(newTask.getTaskId(), (Subtask) newTask); //Добавили подзадачу в список подзадач
-                        Epic epic = epics.get(epicId);
-                        epic.getChildTasksIds().add(newTask.getTaskId()); //Добавили подзадачу в список подзадач эпика
-                    }
-                } else if (newTask instanceof Epic) {
-                    epics.put(newTask.getTaskId(), (Epic) newTask);
-                } else if (newTask instanceof Task) {
-                    tasks.put(newTask.getTaskId(), newTask);
-                }
                 assert newTask != null;
+                Class<? extends Task> type = newTask.getClass();
+                if (type.equals(Subtask.class)) {
+                    fileBackedTaskManager.addSubtask((Subtask) newTask);
+                } else if (type.equals(Epic.class)) {
+                    fileBackedTaskManager.addEpic((Epic) newTask);
+                } else {
+                    fileBackedTaskManager.addTask(newTask);
+                }
                 if (maxId < newTask.getTaskId()) {
                     maxId = newTask.getTaskId();
                 }
@@ -76,6 +72,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     Status.valueOf(split[3]));
             default -> null;
         };
+    }
+
+    private void addTask(Task task) {
+        getTasks().put(task.getTaskId(), task);
+    }
+
+    private void addEpic(Epic epic) {
+        getEpics().put(epic.getTaskId(), epic);
+    }
+
+    private void addSubtask(Subtask subtask) {
+        int epicId = subtask.getEpicId();
+        getSubtasks().put(subtask.getTaskId(), subtask);
+        if (getEpics().containsKey(epicId)) {
+            getSubtasks().put(subtask.getTaskId(), subtask); //Добавили подзадачу в список подзадач
+            Epic epic = getEpics().get(epicId);
+            epic.getChildTasksIds().add(subtask.getTaskId()); //Добавили подзадачу в список подзадач эпика
+        }
     }
 
 
@@ -149,5 +163,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void removeAllSubtasks() {
         super.removeAllSubtasks();
         save();
+    }
+
+    @Override
+    public Map<Integer, Task> getTasks() {
+        return super.getTasks();
+    }
+
+    @Override
+    public Map<Integer, Epic> getEpics() {
+        return super.getEpics();
+    }
+
+    @Override
+    public Map<Integer, Subtask> getSubtasks() {
+        return super.getSubtasks();
     }
 }

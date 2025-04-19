@@ -1,11 +1,13 @@
 import tasks.*;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         TaskManager taskManager = Managers.getDefault();
-
+        taskManager = FileBackedTaskManager.loadFromFile(new File(System.getProperty("user.home"),
+                "testFile.txt"));
 
         Task task1 = new Task("Задача1", "Описание задачи1");
         Task task2 = new Task("Задача2", "Описание задачи2");
@@ -29,16 +31,16 @@ public class Main {
         //taskManager.createSubtask(subtask2);
         taskManager.updateSubtask(subtask3);
 
-        System.out.println(taskManager.getTask(2));
-        System.out.println(taskManager.getTask(1));
-        System.out.println(taskManager.getEpic(3));
-        System.out.println(taskManager.getSubtask(5));
+        //System.out.println(taskManager.getTask(2));
+        //System.out.println(taskManager.getTask(1));
+        //System.out.println(taskManager.getEpic(3));
+        //System.out.println(taskManager.getSubtask(5));
 
-        System.out.println(taskManager.getAllEpics());
-        System.out.println(taskManager.getAllSubtasks());
+        System.out.println(taskManager.getAllTasks());
+        //System.out.println(taskManager.getAllEpics());
+        //System.out.println(taskManager.getAllSubtasks());
         //System.out.println(taskManager.getEpicSubtasks(4));
-        System.out.println(taskManager.getSubtask(5));
-        taskManager.createTask(task1);
+        //System.out.println(taskManager.getSubtask(5));
 
         //taskManager.removeAllEpics();
         for (Task task : taskManager.getHistory()) {

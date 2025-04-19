@@ -11,15 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class InMemoryTaskManagerTest {
-    private TaskManager taskManager;
+    private InMemoryTaskManager taskManager;
 
     @BeforeEach
     public void beforeEach() {
         taskManager = new InMemoryTaskManager();
         Task.setCounter(0);
-        InMemoryTaskManager.tasks.clear();
-        InMemoryTaskManager.epics.clear();
-        InMemoryTaskManager.subtasks.clear();
+        taskManager.getTasks().clear();
+        taskManager.getEpics().clear();
+        taskManager.getSubtasks().clear();
     }
 
     //Добавление нового задания
