@@ -164,19 +164,4 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         super.removeAllSubtasks();
         save();
     }
-
-    @Override
-    public Map<Integer, Task> getTasks() {
-        return super.getTasks();
-    }
-
-    @Override
-    public Map<Integer, Epic> getEpics() {
-        return super.getEpics();
-    }
-
-    @Override
-    public Map<Integer, Subtask> getSubtasks() {
-        return super.getSubtasks();
-    }
 }
