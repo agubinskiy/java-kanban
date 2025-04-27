@@ -57,8 +57,7 @@ public class Task {
                 "," + getClass().toString().substring(12).toUpperCase() +
                 "," + name +
                 "," + status +
-                "," + description +
-                ",";
+                "," + description;
     }
 
     public int getTaskId() {

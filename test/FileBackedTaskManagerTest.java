@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class FileBackedTaskManagerTest {
-    private TaskManager taskManager;
+    private FileBackedTaskManager taskManager;
     private File tempFile;
     private String columns = "id,type,name,status,description,epic" + "\n";
 
@@ -27,9 +27,9 @@ public class FileBackedTaskManagerTest {
                 fileWriter.write(columns);
             }
             taskManager = new FileBackedTaskManager(tempFile);
-            InMemoryTaskManager.tasks.clear();
-            InMemoryTaskManager.epics.clear();
-            InMemoryTaskManager.subtasks.clear();
+            taskManager.getTasks().clear();
+            taskManager.getEpics().clear();
+            taskManager.getSubtasks().clear();
             Task.setCounter(0);
         } catch (IOException e) {
             System.out.println("Ошибка при создании файла: " + e.getMessage());
@@ -40,9 +40,9 @@ public class FileBackedTaskManagerTest {
     @Test
     void shouldLoadTaskFromFile() throws IOException {
         try (Writer fileWriter = new FileWriter(String.valueOf(tempFile), true)) {
-            fileWriter.write("1,TASK,Задача1,NEW,Описание задачи1," + "\n");
+            fileWriter.write("1,TASK,Задача1,NEW,Описание задачи1" + "\n");
         }
-        FileBackedTaskManager.loadFromFile(tempFile);
+        taskManager = FileBackedTaskManager.loadFromFile(tempFile);
         List<Task> tasks = taskManager.getAllTasks();
 
         assertNotNull(tasks, "Задачи не найдены.");
@@ -53,10 +53,10 @@ public class FileBackedTaskManagerTest {
     @Test
     void shouldLoadEpicAndSubtaskFromFile() throws IOException {
         try (Writer fileWriter = new FileWriter(String.valueOf(tempFile), true)) {
-            fileWriter.write("1,EPIC,Эпик1,NEW,Описание эпика1," + "\n");
+            fileWriter.write("1,EPIC,Эпик1,NEW,Описание эпика1" + "\n");
             fileWriter.write("2,SUBTASK,Подзадача1,NEW,Описание подзадачи1,1" + "\n");
         }
-        FileBackedTaskManager.loadFromFile(tempFile);
+        taskManager = FileBackedTaskManager.loadFromFile(tempFile);
         List<Epic> epics = taskManager.getAllEpics();
         List<Subtask> subtasks = taskManager.getAllSubtasks();
 
@@ -78,7 +78,7 @@ public class FileBackedTaskManagerTest {
         String allTasksInFile = Files.readString(tempFile.toPath());
 
         assertNotNull(allTasksInFile, "Задачи не возвращаются.");
-        assertEquals(allTasksInFile, columns + "1,TASK,Test addNewTask,NEW,Test addNewTask description," + "\n", "Задача некорректно добавлена в файл");
+        assertEquals(allTasksInFile, columns + "1,TASK,Test addNewTask,NEW,Test addNewTask description" + "\n", "Задача некорректно добавлена в файл");
     }
 
     @Test
@@ -91,6 +91,6 @@ public class FileBackedTaskManagerTest {
 
 
         assertNotNull(allTasksInFile, "Задачи не возвращаются.");
-        assertEquals(allTasksInFile, columns + "1,EPIC,Test Epic,NEW,Test Epic description," + "\n" + "2,SUBTASK,Test Subtask,NEW,Test Subtask description,1" + "\n", "Эпик с подзадачей некорректно добавлены в файл");
+        assertEquals(allTasksInFile, columns + "1,EPIC,Test Epic,NEW,Test Epic description" + "\n" + "2,SUBTASK,Test Subtask,NEW,Test Subtask description,1" + "\n", "Эпик с подзадачей некорректно добавлены в файл");
     }
 }
