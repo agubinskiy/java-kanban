@@ -1,5 +1,5 @@
+import org.junit.jupiter.api.BeforeEach;
 import tasks.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class InMemoryTaskManagerTest {
-    private TaskManager taskManager = Managers.getDefault();
+    private InMemoryTaskManager taskManager;
 
-    @AfterEach
-    public void AfterEach() {
+    @BeforeEach
+    public void beforeEach() {
+        taskManager = new InMemoryTaskManager();
         Task.setCounter(0);
+        taskManager.getTasks().clear();
+        taskManager.getEpics().clear();
+        taskManager.getSubtasks().clear();
     }
 
     //Добавление нового задания
@@ -80,7 +84,6 @@ class InMemoryTaskManagerTest {
         Subtask subtask2 = new Subtask("Test Subtask", "Test Subtask description", 2);
         taskManager.createTask(task);
         taskManager.createSubtask(subtask1);
-
         assertNull(taskManager.getSubtask(2));
         Assertions.assertEquals(new ArrayList<Subtask>(), taskManager.getAllSubtasks());
 
@@ -94,7 +97,7 @@ class InMemoryTaskManagerTest {
     @Test
     void updateTask() {
         Task task = new Task("Test addNewTask", "Test addNewTask description");
-        Task updatedTask = new Task(1,"Test updateTask", "Test updateTask description", Status.IN_PROGRESS);
+        Task updatedTask = new Task(1, "Test updateTask", "Test updateTask description", Status.IN_PROGRESS);
         taskManager.createTask(task);
         taskManager.updateTask(updatedTask);
         final Task savedTask = taskManager.getTask(1);
@@ -113,7 +116,7 @@ class InMemoryTaskManagerTest {
     @Test
     void updateEpic() {
         Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description");
-        Epic updatedEpic = new Epic(1,"Test updateEpic", "Test updateEpic description");
+        Epic updatedEpic = new Epic(1, "Test updateEpic", "Test updateEpic description");
         taskManager.createEpic(epic);
         taskManager.updateEpic(updatedEpic);
         final Epic savedEpic = taskManager.getEpic(1);
@@ -134,7 +137,7 @@ class InMemoryTaskManagerTest {
         Epic epic1 = new Epic("Test Epic1", "Test Epic1 description");
         Epic epic2 = new Epic("Test Epic2", "Test Epic2 description");
         Subtask subtask = new Subtask("Test Subtask", "Test Subtask description", 1);
-        Subtask updatedSubtask = new Subtask(3,"Test updatedSubtask",
+        Subtask updatedSubtask = new Subtask(3, "Test updatedSubtask",
                 "Test updatedSubtask description", 2);
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
@@ -235,7 +238,7 @@ class InMemoryTaskManagerTest {
         Epic epic = new Epic("Test addNewEpic", "Test addNewEpic description");
         Subtask subtask1 = new Subtask("Test Subtask1", "Test Subtask1 description", 1);
         Subtask subtask2 = new Subtask("Test Subtask2", "Test Subtask2 description", 1);
-        Subtask updatedSubtask1 = new Subtask(2,"Test Subtask2",
+        Subtask updatedSubtask1 = new Subtask(2, "Test Subtask2",
                 "Test Subtask2 description", 1, Status.DONE);
         taskManager.createEpic(epic);
 
@@ -267,7 +270,7 @@ class InMemoryTaskManagerTest {
     @Test
     void shouldShowOldTasksVersion() {
         Task task1 = new Task("Test addNewTask1", "Test addNewTask1 description");
-        Task task2 = new Task(1,"Test addNewTask2", "Test addNewTask2 description", Status.DONE);
+        Task task2 = new Task(1, "Test addNewTask2", "Test addNewTask2 description", Status.DONE);
         List<Task> tasks = new ArrayList<>();
         tasks.add(task1);
 

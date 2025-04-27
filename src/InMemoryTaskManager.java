@@ -261,4 +261,19 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
+    public Map<Integer, Task> getTasks() {
+        return tasks;
+    }
+
+    public Map<Integer, Epic> getEpics() {
+        return epics;
+    }
+
+    public Map<Integer, Subtask> getSubtasks() {
+        return subtasks;
+    }
 }
