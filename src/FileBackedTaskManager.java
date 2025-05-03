@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -20,7 +21,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() throws ManagerSaveException {
         try (Writer fileWriter = new FileWriter(String.valueOf(fileOfTasks))) {
-            fileWriter.write("id,type,name,status,description,epic" + "\n");
+            fileWriter.write("id,type,name,status,description,duration,startTime,epic" + "\n");
             List<Task> listOfTasks = getAllTasks();
             for (Task task : listOfTasks) {
                 fileWriter.write(task.toString() + "\n");
@@ -71,10 +72,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private Task fromString(String string) {
         String[] split = string.split(",");
         return switch (split[1]) {
-            case "TASK" -> new Task(Integer.parseInt(split[0]), split[2], split[4], Status.valueOf(split[3]));
-            case "EPIC" -> new Epic(Integer.parseInt(split[0]), split[2], split[4]);
-            case "SUBTASK" -> new Subtask(Integer.parseInt(split[0]), split[2], split[4], Integer.parseInt(split[5]),
+            case "TASK" -> new Task(Integer.parseInt(split[0]), split[2], split[4],
+                    Long.parseLong((split[5])), LocalDateTime.parse(split[6]),
                     Status.valueOf(split[3]));
+            case "EPIC" -> new Epic(Integer.parseInt(split[0]), split[2], split[4]);
+            case "SUBTASK" -> new Subtask(Integer.parseInt(split[0]), split[2], split[4],
+                    Long.parseLong((split[5])), LocalDateTime.parse(split[6]),
+                    Integer.parseInt(split[7]), Status.valueOf(split[3]));
             default -> null;
         };
     }
