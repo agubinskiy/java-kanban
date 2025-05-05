@@ -23,7 +23,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @BeforeEach
     public void beforeEach() {
         taskManager = createTaskManager();
-        Task.setCounter(0);
     }
 
     //Добавление нового задания

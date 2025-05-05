@@ -6,19 +6,17 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class Task {
-    private final int taskId;
+    private int taskId;
     private String name;
     private String description;
     private Status status;
     private Duration duration;
     private LocalDateTime startTime;
-    private static int counter = 0;
 
     //Конструктор для создания новой задачи
     public Task(String name, String description, long minutes, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
-        this.taskId = ++counter;
         this.duration = Duration.ofMinutes(minutes);
         this.startTime = startTime;
         status = Status.NEW;
@@ -28,7 +26,6 @@ public class Task {
     public Task(String name, String description, long minutes) {
         this.name = name;
         this.description = description;
-        this.taskId = ++counter;
         this.duration = Duration.ofMinutes(minutes);
         status = Status.NEW;
     }
@@ -37,7 +34,6 @@ public class Task {
     public Task(String name, String description, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
-        this.taskId = ++counter;
         this.startTime = startTime;
         status = Status.NEW;
     }
@@ -46,7 +42,6 @@ public class Task {
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.taskId = ++counter;
         status = Status.NEW;
     }
 
@@ -67,10 +62,6 @@ public class Task {
         this.duration = Duration.ofMinutes(minutes);
         this.startTime = startTime;
         this.status = status;
-    }
-
-    public static void setCounter(int counter) {
-        Task.counter = counter;
     }
 
     public Optional<LocalDateTime> getEndTime() {
@@ -97,23 +88,13 @@ public class Task {
 
     @Override
     public String toString() {
-        if (duration != null) {
             return taskId +
                     "," + getClass().toString().substring(12).toUpperCase() +
                     "," + name +
                     "," + status +
                     "," + description +
-                    "," + duration.toMinutes() +
+                    "," + (duration != null ? duration.toMinutes() : null) +
                     "," + startTime;
-        } else {
-            return taskId +
-                    "," + getClass().toString().substring(12).toUpperCase() +
-                    "," + name +
-                    "," + status +
-                    "," + description +
-                    "," + null +
-                    "," + startTime;
-        }
     }
 
     public int getTaskId() {
@@ -142,5 +123,9 @@ public class Task {
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 }

@@ -2,6 +2,7 @@ import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.TaskParameters;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -61,7 +62,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
                 //Обновляем счетчик для корректной генерации id при создании новых задач
                 fileBackedTaskManager.setCounter(maxId);
-                Task.setCounter(maxId);
             }
             return fileBackedTaskManager;
         } catch (IOException e) {
@@ -72,13 +72,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private Task fromString(String string) {
         String[] split = string.split(",");
         return switch (split[1]) {
-            case "TASK" -> new Task(Integer.parseInt(split[0]), split[2], split[4],
-                    Long.parseLong((split[5])), LocalDateTime.parse(split[6]),
-                    Status.valueOf(split[3]));
-            case "EPIC" -> new Epic(Integer.parseInt(split[0]), split[2], split[4]);
-            case "SUBTASK" -> new Subtask(Integer.parseInt(split[0]), split[2], split[4],
-                    Long.parseLong((split[5])), LocalDateTime.parse(split[6]),
-                    Integer.parseInt(split[7]), Status.valueOf(split[3]));
+            case "TASK" -> new Task(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
+                    split[TaskParameters.NAME.getIndex()],
+                    split[TaskParameters.DESCRIPTION.getIndex()],
+                    Long.parseLong((split[TaskParameters.DURATION.getIndex()])),
+                    LocalDateTime.parse(split[TaskParameters.STARTTIME.getIndex()]),
+                    Status.valueOf(split[TaskParameters.STATUS.getIndex()]));
+            case "EPIC" -> new Epic(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
+                    split[TaskParameters.NAME.getIndex()],
+                    split[TaskParameters.DESCRIPTION.getIndex()]);
+            case "SUBTASK" -> new Subtask(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
+                    split[TaskParameters.NAME.getIndex()],
+                    split[TaskParameters.DESCRIPTION.getIndex()],
+                    Long.parseLong((split[TaskParameters.DURATION.getIndex()])),
+                    LocalDateTime.parse(split[TaskParameters.STARTTIME.getIndex()]),
+                    Integer.parseInt(split[TaskParameters.EPIC.getIndex()]),
+                    Status.valueOf(split[TaskParameters.STATUS.getIndex()]));
             default -> null;
         };
     }

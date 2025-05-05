@@ -28,6 +28,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createTask(Task task) {
         if (isNotAnyTaskCrossTime(task)) {
             int taskId = ++counter;
+            task.setTaskId(taskId);
             tasks.put(taskId, task);
             if (task.getStartTime().isPresent()) {
                 priorityTasks.add(task);
@@ -40,6 +41,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void createEpic(Epic epic) {
         int epicId = ++counter;
+        epic.setTaskId(epicId);
         epics.put(epicId, epic);
     }
 
@@ -47,6 +49,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void createSubtask(Subtask subtask) {
         if (isNotAnyTaskCrossTime(subtask)) {
             int subtaskId = ++counter;
+            subtask.setTaskId(subtaskId);
             int epicId = subtask.getEpicId();
             if (epics.containsKey(epicId)) {
                 subtasks.put(subtaskId, subtask); //Добавили подзадачу в список подзадач
@@ -169,10 +172,7 @@ public class InMemoryTaskManager implements TaskManager {
                     Subtask oldSubtask = subtasks.get(subtaskId);
                     Epic newEpic = epics.get(epicId);
                     if (epicId != oldSubtask.getEpicId()) { //Если переносим в другой эпик, проверяем статус у старого
-                        Epic oldEpic = epics.get(oldSubtask.getEpicId());
-                        oldEpic.getChildTasksIds().remove((Integer) subtaskId); //Удалили подзадачу из списка старого эпика
-                        updateEpicAfterCheck(oldEpic);
-                        newEpic.getChildTasksIds().add(subtaskId); //Добавили подзадачу в список нового эпика
+                        changeEpicOfSubtask(oldSubtask, newEpic);
                     }
                     subtasks.remove(subtaskId); //удалили задачу из списка подзадач
                     subtasks.put(subtaskId, subtask);
@@ -368,6 +368,13 @@ public class InMemoryTaskManager implements TaskManager {
                     .filter(taskFromList -> taskFromList.getTaskId() != task.getTaskId())
                     .noneMatch(taskFromList -> isTasksCrossTime(task, taskFromList));
         }
+    }
+
+    private void changeEpicOfSubtask(Subtask subtask, Epic newEpic) {
+        Epic oldEpic = epics.get(subtask.getEpicId());
+        oldEpic.getChildTasksIds().remove((Integer) subtask.getTaskId()); //Удалили подзадачу из списка старого эпика
+        updateEpicAfterCheck(oldEpic);
+        newEpic.getChildTasksIds().add(subtask.getTaskId()); //Добавили подзадачу в список нового эпика
     }
 
     @Override

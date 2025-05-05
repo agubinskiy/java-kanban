@@ -19,7 +19,6 @@ public class InMemoryHistoryManagerTest {
     @BeforeEach
     public void beforeEach() {
         taskManager = new InMemoryTaskManager();
-        Task.setCounter(0);
     }
 
     @Test

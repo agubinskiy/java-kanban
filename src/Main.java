@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 public class Main {
     public static void main(String[] args) throws IOException {
         TaskManager taskManager = new InMemoryTaskManager();
+
+        //Нужно для детального тестирования файлового менеджера, очень не хочется удалять
         //TaskManager taskManager = Managers.getDefault();
         //taskManager = FileBackedTaskManager.loadFromFile(new File(System.getProperty("user.home"),
         //        "testFile.txt"));
@@ -39,21 +41,14 @@ public class Main {
         taskManager.createEpic(epic1);
         taskManager.createEpic(epic2);
         taskManager.createSubtask(subtask1);
-        //taskManager.createSubtask(subtask2);
-        //taskManager.updateSubtask(subtask3);
+        taskManager.createSubtask(subtask2);
+        taskManager.updateSubtask(subtask3);
 
         System.out.println(taskManager.getTask(2));
         System.out.println(taskManager.getTask(1));
-        //System.out.println(taskManager.getEpic(3));
         System.out.println(taskManager.getSubtask(5));
 
-        //System.out.println(taskManager.getAllTasks());
-        //System.out.println(taskManager.getAllEpics());
-        //System.out.println(taskManager.getAllSubtasks());
-        //System.out.println(taskManager.getEpicSubtasks(4));
-        //System.out.println(taskManager.getSubtask(5));
 
-        taskManager.removeAllEpics();
         for (Task task : taskManager.getHistory()) {
             System.out.println(task);
         }
