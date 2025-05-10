@@ -2,12 +2,14 @@ import tasks.Epic;
 import tasks.Status;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.TaskParameters;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
@@ -20,7 +22,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() throws ManagerSaveException {
         try (Writer fileWriter = new FileWriter(String.valueOf(fileOfTasks))) {
-            fileWriter.write("id,type,name,status,description,epic" + "\n");
+            fileWriter.write("id,type,name,status,description,duration,startTime,epic" + "\n");
             List<Task> listOfTasks = getAllTasks();
             for (Task task : listOfTasks) {
                 fileWriter.write(task.toString() + "\n");
@@ -60,7 +62,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
                 //Обновляем счетчик для корректной генерации id при создании новых задач
                 fileBackedTaskManager.setCounter(maxId);
-                Task.setCounter(maxId);
             }
             return fileBackedTaskManager;
         } catch (IOException e) {
@@ -71,10 +72,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private Task fromString(String string) {
         String[] split = string.split(",");
         return switch (split[1]) {
-            case "TASK" -> new Task(Integer.parseInt(split[0]), split[2], split[4], Status.valueOf(split[3]));
-            case "EPIC" -> new Epic(Integer.parseInt(split[0]), split[2], split[4]);
-            case "SUBTASK" -> new Subtask(Integer.parseInt(split[0]), split[2], split[4], Integer.parseInt(split[5]),
-                    Status.valueOf(split[3]));
+            case "TASK" -> new Task(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
+                    split[TaskParameters.NAME.getIndex()],
+                    split[TaskParameters.DESCRIPTION.getIndex()],
+                    Long.parseLong((split[TaskParameters.DURATION.getIndex()])),
+                    LocalDateTime.parse(split[TaskParameters.STARTTIME.getIndex()]),
+                    Status.valueOf(split[TaskParameters.STATUS.getIndex()]));
+            case "EPIC" -> new Epic(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
+                    split[TaskParameters.NAME.getIndex()],
+                    split[TaskParameters.DESCRIPTION.getIndex()]);
+            case "SUBTASK" -> new Subtask(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
+                    split[TaskParameters.NAME.getIndex()],
+                    split[TaskParameters.DESCRIPTION.getIndex()],
+                    Long.parseLong((split[TaskParameters.DURATION.getIndex()])),
+                    LocalDateTime.parse(split[TaskParameters.STARTTIME.getIndex()]),
+                    Integer.parseInt(split[TaskParameters.EPIC.getIndex()]),
+                    Status.valueOf(split[TaskParameters.STATUS.getIndex()]));
             default -> null;
         };
     }

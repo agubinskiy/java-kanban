@@ -1,19 +1,47 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Task {
     private int taskId;
     private String name;
     private String description;
     private Status status;
-    private static int counter = 0;
+    private Duration duration;
+    private LocalDateTime startTime;
 
     //Конструктор для создания новой задачи
+    public Task(String name, String description, long minutes, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.duration = Duration.ofMinutes(minutes);
+        this.startTime = startTime;
+        status = Status.NEW;
+    }
+
+    //Конструктор для создания новой задачи без времени начала
+    public Task(String name, String description, long minutes) {
+        this.name = name;
+        this.description = description;
+        this.duration = Duration.ofMinutes(minutes);
+        status = Status.NEW;
+    }
+
+    //Конструктор для создания новой задачи без продолжительности
+    public Task(String name, String description, LocalDateTime startTime) {
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        status = Status.NEW;
+    }
+
+    //Конструктор для создания эпика
     public Task(String name, String description) {
         this.name = name;
         this.description = description;
-        this.taskId = ++counter;
         status = Status.NEW;
     }
 
@@ -26,15 +54,22 @@ public class Task {
     }
 
     //Конструктор для обновления задачи
-    public Task(int taskId, String name, String description, Status status) {
+    public Task(int taskId, String name, String description, long minutes, LocalDateTime startTime,
+                Status status) {
         this.name = name;
         this.description = description;
         this.taskId = taskId;
+        this.duration = Duration.ofMinutes(minutes);
+        this.startTime = startTime;
         this.status = status;
     }
 
-    public static void setCounter(int counter) {
-        Task.counter = counter;
+    public Optional<LocalDateTime> getEndTime() {
+        if (startTime != null && duration != null) {
+            return Optional.of(startTime.plus(duration));
+        } else {
+            return Optional.empty();
+        }
     }
 
 
@@ -53,11 +88,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return taskId +
-                "," + getClass().toString().substring(12).toUpperCase() +
-                "," + name +
-                "," + status +
-                "," + description;
+            return taskId +
+                    "," + getClass().toString().substring(12).toUpperCase() +
+                    "," + name +
+                    "," + status +
+                    "," + description +
+                    "," + (duration != null ? duration.toMinutes() : null) +
+                    "," + startTime;
     }
 
     public int getTaskId() {
@@ -70,5 +107,25 @@ public class Task {
 
     public Status getStatus() {
         return status;
+    }
+
+    public Optional<Duration> getDuration() {
+        return Optional.ofNullable(duration);
+    }
+
+    public Optional<LocalDateTime> getStartTime() {
+        return Optional.ofNullable(startTime);
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
     }
 }
