@@ -1,14 +1,15 @@
+import managers.InMemoryTaskManager;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
-import tasks.Status;
+import enums.Status;
 import tasks.Subtask;
 import tasks.Task;
 
 import java.time.LocalDateTime;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 

@@ -1,3 +1,6 @@
+package managers;
+
+import exceptions.NotFoundException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -17,7 +20,7 @@ public interface TaskManager {
 
     List<Subtask> getAllSubtasks();
 
-    Task getTask(int taskId);
+    Task getTask(int taskId) throws NotFoundException;
 
     Epic getEpic(int epicId);
 

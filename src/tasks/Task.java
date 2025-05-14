@@ -1,5 +1,7 @@
 package tasks;
 
+import enums.Status;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -12,6 +14,10 @@ public class Task {
     private Status status;
     private Duration duration;
     private LocalDateTime startTime;
+
+    public Task() {
+        status = Status.NEW;
+    }
 
     //Конструктор для создания новой задачи
     public Task(String name, String description, long minutes, LocalDateTime startTime) {
@@ -127,5 +133,21 @@ public class Task {
 
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
