@@ -1,7 +1,6 @@
 package handlers;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import enums.Endpoint;
@@ -136,7 +135,4 @@ public class TaskHttpHandler extends BaseHttpHandler implements HttpHandler {
         taskManager.removeAllTasks();
         sendText(httpExchange, "Задачи удалены");
     }
-}
-
-class TaskListTypeToken extends TypeToken<List<Task>> {
 }
