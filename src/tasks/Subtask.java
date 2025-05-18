@@ -8,6 +8,10 @@ import java.util.Objects;
 public class Subtask extends Task {
     private int epicId;
 
+    public Subtask() {
+        super();
+    }
+
     public Subtask(String name, String description, long minutes, LocalDateTime startTime, int epicId) {
         super(name, description, minutes, startTime);
         this.epicId = epicId;

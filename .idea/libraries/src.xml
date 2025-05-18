@@ -9,6 +9,7 @@
       <root url="jar://$PROJECT_DIR$/../m1-t23-junit/lib/junit-platform-commons-1.4.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/../m1-t23-junit/lib/junit-platform-engine-1.4.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/../m1-t23-junit/lib/opentest4j-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../m1-t23-junit/lib/junit-jupiter-5.4.2-javadoc.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$PROJECT_DIR$/../m1-t23-junit/lib/apiguardian-api-1.0.0-javadoc.jar!/" />

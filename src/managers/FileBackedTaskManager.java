@@ -1,11 +1,11 @@
 package managers;
 
+import enums.Status;
+import enums.TaskParameters;
 import exceptions.ManagerSaveException;
 import tasks.Epic;
-import enums.Status;
 import tasks.Subtask;
 import tasks.Task;
-import enums.TaskParameters;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -43,7 +43,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
+    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
         try {
             String allTasksInFile = Files.readString(file.toPath());

@@ -1,10 +1,10 @@
 package managers;
 
+import enums.Status;
 import exceptions.NotFoundException;
 import exceptions.TasksCrossTimeException;
 import history.HistoryManager;
 import tasks.Epic;
-import enums.Status;
 import tasks.Subtask;
 import tasks.Task;
 
@@ -62,7 +62,7 @@ public class InMemoryTaskManager implements TaskManager {
                 updateEpicAfterCheck(epic);
             } else {
                 counter--;
-                throw new NotFoundException ("Ошибка, эпика с таким идентификатором не существует");
+                throw new NotFoundException("Не найдено эпика с id: " + epicId);
             }
             if (subtask.getStartTime().isPresent()) {
                 priorityTasks.add(subtask);
@@ -93,7 +93,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.add(tasks.get(taskId));
             return tasks.get(taskId);
         } else {
-            throw new NotFoundException("Не найдено задачи с таким идентификатором");
+            throw new NotFoundException("Не найдено задачи с id: " + taskId);
         }
     }
 
@@ -103,7 +103,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.add(epics.get(epicId));
             return epics.get(epicId);
         } else {
-            throw new NotFoundException("Не найдено эпика с таким идентификатором");
+            throw new NotFoundException("Не найдено эпика с id: " + epicId);
         }
     }
 
@@ -113,7 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.add(subtasks.get(subtaskId));
             return subtasks.get(subtaskId);
         } else {
-            throw new NotFoundException("Не найдено подзадачи с таким идентификатором");
+            throw new NotFoundException("Не найдено подзадачи с id: " + subtaskId);
         }
     }
 
@@ -122,7 +122,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(epicId)) {
             return getEpicSubtasks(epics.get(epicId));
         } else {
-            throw new NotFoundException("Не найдено эпика с таким идентификатором");
+            throw new NotFoundException("Не найдено эпика с id: " + epicId);
         }
     }
 
@@ -141,7 +141,7 @@ public class InMemoryTaskManager implements TaskManager {
                 }
                 System.out.println("Задача обновлена");
             } else {
-                throw new NotFoundException("Не найдено задачи с таким идентификатором");
+                throw new NotFoundException("Не найдено задачи с id: " + taskId);
             }
         } else {
             throw new TasksCrossTimeException("Ошибка пересечения времени выполнения при обновлении задачи");
@@ -155,7 +155,7 @@ public class InMemoryTaskManager implements TaskManager {
             epics.put(epic.getTaskId(), epic);
             System.out.println("Эпик обновлён");
         } else {
-            throw new NotFoundException("Не найдено эпика с таким идентификатором");
+            throw new NotFoundException("Не найдено эпика с id: " + epic.getTaskId());
         }
     }
 
@@ -182,10 +182,10 @@ public class InMemoryTaskManager implements TaskManager {
                     }
                     System.out.println("Подзадача обновлена");
                 } else {
-                    throw new NotFoundException("Не найдено эпика с таким идентификатором");
+                    throw new NotFoundException("Не найдено эпика с id: " + epicId);
                 }
             } else {
-                throw new NotFoundException("Не найдено подзадачи с таким идентификатором");
+                throw new NotFoundException("Не найдено подзадачи с id: " + subtask.getTaskId());
             }
         } else {
             throw new TasksCrossTimeException("Ошибка пересечения времени выполнения при обновлении подзадачи");
@@ -202,7 +202,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(taskId);
             System.out.println("Задача удалена");
         } else {
-            throw new NotFoundException("Не найдено задачи с таким идентификатором");
+            throw new NotFoundException("Не найдено задачи с id: " + taskId);
         }
     }
 
@@ -221,7 +221,7 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.remove(epicId);
             System.out.println("Эпик удалён");
         } else {
-            throw new NotFoundException("Не найдено эпика с таким идентификатором");
+            throw new NotFoundException("Не найдено эпика с id: " + epicId);
         }
     }
 
@@ -240,7 +240,7 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Подзадача удалена");
             historyManager.remove(subtaskId);
         } else {
-            throw new NotFoundException("Не найдено подзадачи с таким идентификатором");
+            throw new NotFoundException("Не найдено подзадачи с id: " + subtaskId);
         }
     }
 

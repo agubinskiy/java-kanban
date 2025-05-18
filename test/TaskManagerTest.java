@@ -1,10 +1,11 @@
+import enums.Status;
+import exceptions.NotFoundException;
 import exceptions.TasksCrossTimeException;
 import managers.TaskManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
-import enums.Status;
 import tasks.Subtask;
 import tasks.Task;
 
@@ -12,10 +13,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 abstract class TaskManagerTest<T extends TaskManager> {
@@ -94,13 +93,16 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Subtask subtask2 = new Subtask("Test Subtask", "Test Subtask description", 30,
                 LocalDateTime.of(2025, 5, 1, 14, 0), 2);
         taskManager.createTask(task);
-        taskManager.createSubtask(subtask1);
-        assertNull(taskManager.getSubtask(2));
+        Assertions.assertThrows(NotFoundException.class, () -> taskManager.createSubtask(subtask1),
+                "Подзадача добавлена к задаче вместо эпика");
+        Assertions.assertThrows(NotFoundException.class, () -> taskManager.getSubtask(1),
+                "Подзадача добавлена к задаче вместо эпика");
         Assertions.assertEquals(new ArrayList<Subtask>(), taskManager.getAllSubtasks());
 
-        taskManager.createSubtask(subtask2);
-
-        assertNull(taskManager.getSubtask(2));
+        Assertions.assertThrows(NotFoundException.class, () -> taskManager.createSubtask(subtask2),
+                "Подзадача добавлена к задаче вместо эпика");
+        Assertions.assertThrows(NotFoundException.class, () -> taskManager.getSubtask(2),
+                "Подзадача добавлена к задаче вместо эпика");
         Assertions.assertEquals(new ArrayList<Subtask>(), taskManager.getAllSubtasks());
     }
 
@@ -189,7 +191,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final List<Task> tasks = taskManager.getAllTasks();
 
         assertEquals(2, tasks.size(), "Неверное количество задач.");
-        Assertions.assertNull(taskManager.getTask(2), "Задача не удалена");
+        Assertions.assertThrows(NotFoundException.class, () -> taskManager.getTask(2),
+                "Задача не удалена");
         Assertions.assertEquals(taskManager.getTask(3), tasks.get(1), "Задачи не совпадают.");
 
         taskManager.removeAllTasks();
@@ -218,9 +221,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertEquals(2, epics.size(), "Неверное количество эпиков.");
         assertEquals(1, subtasks.size(), "Неверное количество подзадач.");
-        Assertions.assertNull(taskManager.getEpic(2), "Эпик не удален");
+        Assertions.assertThrows(NotFoundException.class, () -> taskManager.getEpic(2), "Эпик не удалён");
         Assertions.assertEquals(taskManager.getEpic(3), epics.get(1), "Эпики не совпадают.");
-        Assertions.assertNull(taskManager.getSubtask(5), "Подзадача не удалена");
+        Assertions.assertThrows(NotFoundException.class, () -> taskManager.getSubtask(5),
+                "Подзадача не удалена");
 
         taskManager.removeAllEpics();
 
@@ -248,7 +252,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         final List<Subtask> subtasks = taskManager.getAllSubtasks();
 
         assertEquals(2, subtasks.size(), "Неверное количество подзадач.");
-        Assertions.assertEquals(taskManager.getEpicSubtasks(1), new ArrayList<Subtask>(), "Подзадача не удалена");
+        Assertions.assertEquals(taskManager.getEpicSubtasks(1), new ArrayList<Subtask>(),
+                "Подзадача не удалена");
         assertEquals(epic1.getChildTasksIds(), new ArrayList<Integer>(), "Подзадача не удалена");
 
         taskManager.removeAllSubtasks();

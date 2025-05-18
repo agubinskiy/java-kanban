@@ -21,42 +21,42 @@ public class Task {
 
     //Конструктор для создания новой задачи
     public Task(String name, String description, long minutes, LocalDateTime startTime) {
+        this();
         this.name = name;
         this.description = description;
         this.duration = Duration.ofMinutes(minutes);
         this.startTime = startTime;
-        status = Status.NEW;
     }
 
     //Конструктор для создания новой задачи без времени начала
     public Task(String name, String description, long minutes) {
+        this();
         this.name = name;
         this.description = description;
         this.duration = Duration.ofMinutes(minutes);
-        status = Status.NEW;
     }
 
     //Конструктор для создания новой задачи без продолжительности
     public Task(String name, String description, LocalDateTime startTime) {
+        this();
         this.name = name;
         this.description = description;
         this.startTime = startTime;
-        status = Status.NEW;
     }
 
     //Конструктор для создания эпика
     public Task(String name, String description) {
+        this();
         this.name = name;
         this.description = description;
-        status = Status.NEW;
     }
 
     //Конструктор для обновления эпика
     public Task(int taskId, String name, String description) {
+        this();
         this.name = name;
         this.description = description;
         this.taskId = taskId;
-        status = Status.NEW;
     }
 
     //Конструктор для обновления задачи
