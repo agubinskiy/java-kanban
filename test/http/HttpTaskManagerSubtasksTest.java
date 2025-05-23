@@ -1,10 +1,15 @@
+package http;
+
 import api.HttpTaskServer;
 import com.google.gson.Gson;
 import enums.Status;
+import managers.InMemoryTaskManager;
 import managers.TaskManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Epic;
+import tasks.Subtask;
 import tasks.Task;
 
 import java.io.IOException;
@@ -18,20 +23,24 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class HttpTaskManagerTasksTest {
+public class HttpTaskManagerSubtasksTest {
     HttpTaskServer httpTaskServer;
     TaskManager taskManager;
     Gson gson;
 
-    public HttpTaskManagerTasksTest() {
+    public HttpTaskManagerSubtasksTest() {
     }
 
     @BeforeEach
     public void setUp() throws IOException {
         httpTaskServer = new HttpTaskServer();
+        httpTaskServer.taskManager = new InMemoryTaskManager();
         taskManager = httpTaskServer.getTaskManager();
         gson = httpTaskServer.getGson();
         httpTaskServer.start();
+
+        Epic epic = new Epic("Test 1", "Testing epic 1");
+        taskManager.createEpic(epic);
     }
 
     @AfterEach
@@ -40,12 +49,13 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void testAddTask() throws IOException, InterruptedException {
-        Task task = new Task("Test 1", "Testing task 1", 30, LocalDateTime.now());
-        String taskJson = gson.toJson(task);
+    void testAddSubtask() throws IOException, InterruptedException {
+        Subtask subtask = new Subtask("Test 1", "Testing subtask 1", 30,
+                LocalDateTime.now(), 1);
+        String taskJson = gson.toJson(subtask);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks");
+        URI url = URI.create("http://localhost:8080/subtasks");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(taskJson))
@@ -56,7 +66,7 @@ public class HttpTaskManagerTasksTest {
 
         assertEquals(201, response.statusCode());
 
-        List<Task> tasksFromManager = taskManager.getAllTasks();
+        List<Subtask> tasksFromManager = taskManager.getAllSubtasks();
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
@@ -64,15 +74,16 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void testUpdateTask() throws IOException, InterruptedException {
-        Task task1 = new Task("Test 1", "Testing task 1", 30, LocalDateTime.now());
-        Task task2 = new Task(1, "Test 2", "Testing task 1", 30,
-                LocalDateTime.now(), Status.NEW);
-        taskManager.createTask(task1);
-        String taskJson = gson.toJson(task2);
+    void testUpdateSubtask() throws IOException, InterruptedException {
+        Subtask subtask1 = new Subtask("Test 1", "Testing subtask 1", 30,
+                LocalDateTime.of(2025, 5, 18, 14, 0), 1);
+        Subtask subtask2 = new Subtask(2, "Test 2", "Testing subtask 1", 30,
+                LocalDateTime.of(2025, 5, 18, 15, 0), 1, Status.NEW);
+        taskManager.createSubtask(subtask1);
+        String taskJson = gson.toJson(subtask2);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks");
+        URI url = URI.create("http://localhost:8080/subtasks");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(taskJson))
@@ -83,7 +94,7 @@ public class HttpTaskManagerTasksTest {
 
         assertEquals(201, response.statusCode());
 
-        List<Task> tasksFromManager = taskManager.getAllTasks();
+        List<Subtask> tasksFromManager = taskManager.getAllSubtasks();
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(1, tasksFromManager.size(), "Некорректное количество задач");
@@ -91,12 +102,12 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void testGetTask() throws IOException, InterruptedException {
-        Task task = new Task("Test 1", "Testing task 1", 30, LocalDateTime.now());
-        taskManager.createTask(task);
+    void testGetSubtask() throws IOException, InterruptedException {
+        Subtask subtask = new Subtask("Test 1", "Testing subtask 1", 30, LocalDateTime.now(), 1);
+        taskManager.createSubtask(subtask);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/1");
+        URI url = URI.create("http://localhost:8080/subtasks/2");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .GET()
@@ -107,23 +118,23 @@ public class HttpTaskManagerTasksTest {
 
         assertEquals(200, response.statusCode());
 
-        Task taskFromManager = taskManager.getAllTasks().getFirst();
+        Task taskFromManager = taskManager.getAllSubtasks().getFirst();
 
         assertNotNull(taskFromManager, "Задачи не возвращаются");
         assertEquals(gson.toJson(taskFromManager), response.body(), "Некорректные данные");
     }
 
     @Test
-    void testGetTasks() throws IOException, InterruptedException {
-        Task task1 = new Task("Test 1", "Testing task 1", 30,
-                LocalDateTime.of(2025, 5, 18, 14, 0));
-        Task task2 = new Task("Test 2", "Testing task 2", 30,
-                LocalDateTime.of(2025, 5, 18, 15, 0));
-        taskManager.createTask(task1);
-        taskManager.createTask(task2);
+    void testGetSubtasks() throws IOException, InterruptedException {
+        Subtask subtask1 = new Subtask("Test 1", "Testing subtask 1", 30,
+                LocalDateTime.of(2025, 5, 18, 14, 0), 1);
+        Subtask subtask2 = new Subtask("Test 2", "Testing subtask 2", 30,
+                LocalDateTime.of(2025, 5, 18, 15, 0), 1);
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks");
+        URI url = URI.create("http://localhost:8080/subtasks");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .GET()
@@ -134,19 +145,20 @@ public class HttpTaskManagerTasksTest {
 
         assertEquals(200, response.statusCode());
 
-        List<Task> tasksFromManager = taskManager.getAllTasks();
+        List<Subtask> tasksFromManager = taskManager.getAllSubtasks();
 
         assertNotNull(tasksFromManager, "Задачи не возвращаются");
         assertEquals(gson.toJson(tasksFromManager), response.body(), "Некорректные данные");
     }
 
     @Test
-    void testDeleteTask() throws IOException, InterruptedException {
-        Task task = new Task("Test 1", "Testing task 1", 30, LocalDateTime.now());
-        taskManager.createTask(task);
+    void testDeleteSubtask() throws IOException, InterruptedException {
+        Subtask subtask = new Subtask("Test 1", "Testing subtask 1",
+                30, LocalDateTime.now(), 1);
+        taskManager.createSubtask(subtask);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/1");
+        URI url = URI.create("http://localhost:8080/subtasks/2");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .DELETE()
@@ -157,22 +169,22 @@ public class HttpTaskManagerTasksTest {
 
         assertEquals(200, response.statusCode());
 
-        List<Task> tasksFromManager = taskManager.getAllTasks();
+        List<Subtask> tasksFromManager = taskManager.getAllSubtasks();
 
         assertEquals(0, tasksFromManager.size(), "Некорректное количество задач");
     }
 
     @Test
-    void testDeleteTasks() throws IOException, InterruptedException {
-        Task task1 = new Task("Test 1", "Testing task 1", 30,
-                LocalDateTime.of(2025, 5, 18, 14, 0));
-        Task task2 = new Task("Test 2", "Testing task 2", 30,
-                LocalDateTime.of(2025, 5, 18, 15, 0));
-        taskManager.createTask(task1);
-        taskManager.createTask(task2);
+    void testDeleteSubtasks() throws IOException, InterruptedException {
+        Subtask subtask1 = new Subtask("Test 1", "Testing subtask 1", 30,
+                LocalDateTime.of(2025, 5, 18, 14, 0), 1);
+        Subtask subtask2 = new Subtask("Test 2", "Testing subtask 2", 30,
+                LocalDateTime.of(2025, 5, 18, 15, 0), 1);
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks");
+        URI url = URI.create("http://localhost:8080/subtasks");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .DELETE()
@@ -183,18 +195,19 @@ public class HttpTaskManagerTasksTest {
 
         assertEquals(200, response.statusCode());
 
-        List<Task> tasksFromManager = taskManager.getAllTasks();
+        List<Subtask> tasksFromManager = taskManager.getAllSubtasks();
 
         assertEquals(0, tasksFromManager.size(), "Некорректное количество задач");
     }
 
     @Test
     void testUnknownEndpoint() throws IOException, InterruptedException {
-        Task task = new Task("Test 1", "Testing task 1", 30, LocalDateTime.now());
-        taskManager.createTask(task);
+        Subtask subtask = new Subtask("Test 1", "Testing subtask 1", 30,
+                LocalDateTime.now(), 1);
+        taskManager.createSubtask(subtask);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/1/name");
+        URI url = URI.create("http://localhost:8080/subtasks/1/name");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .GET()
@@ -207,12 +220,13 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void testGetIncorrectTask() throws IOException, InterruptedException {
-        Task task = new Task("Test 1", "Testing task 1", 30, LocalDateTime.now());
-        taskManager.createTask(task);
+    void testGetIncorrectSubtask() throws IOException, InterruptedException {
+        Subtask subtask = new Subtask("Test 1", "Testing subtask 1", 30,
+                LocalDateTime.now(), 1);
+        taskManager.createSubtask(subtask);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/2");
+        URI url = URI.create("http://localhost:8080/subtasks/3");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .GET()
@@ -225,12 +239,12 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void testDeleteIncorrectTask() throws IOException, InterruptedException {
-        Task task = new Task("Test 1", "Testing task 1", 30, LocalDateTime.now());
-        taskManager.createTask(task);
+    void testDeleteIncorrectSubtask() throws IOException, InterruptedException {
+        Subtask subtask = new Subtask("Test 1", "Testing subtask 1", 30, LocalDateTime.now(), 1);
+        taskManager.createSubtask(subtask);
 
         HttpClient client = HttpClient.newHttpClient();
-        URI url = URI.create("http://localhost:8080/tasks/2");
+        URI url = URI.create("http://localhost:8080/subtasks/3");
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .DELETE()
@@ -243,13 +257,13 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void testUpdateIncorrectTask() throws IOException, InterruptedException {
-        Task task1 = new Task("Test 1", "Testing task 1", 30,
-                LocalDateTime.of(2025, 5, 18, 14, 0));
-        Task task2 = new Task(2, "Test 2", "Testing task 1", 30,
-                LocalDateTime.of(2025, 5, 18, 15, 0), Status.NEW);
-        taskManager.createTask(task1);
-        String taskJson = gson.toJson(task2);
+    void testUpdateIncorrectSubtask() throws IOException, InterruptedException {
+        Subtask subtask1 = new Subtask("Test 1", "Testing subtask 1", 30,
+                LocalDateTime.of(2025, 5, 18, 14, 0), 1);
+        Subtask subtask2 = new Subtask(3, "Test 2", "Testing subtask 1", 30,
+                LocalDateTime.of(2025, 5, 18, 15, 0), 1, Status.NEW);
+        taskManager.createSubtask(subtask1);
+        String taskJson = gson.toJson(subtask2);
 
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");
@@ -265,13 +279,13 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    void testCreateCrossedTimeTask() throws IOException, InterruptedException {
-        Task task1 = new Task("Test 1", "Testing task 1", 90,
-                LocalDateTime.of(2025, 5, 18, 14, 0));
-        Task task2 = new Task("Test 2", "Testing task 1", 30,
-                LocalDateTime.of(2025, 5, 18, 15, 0));
-        taskManager.createTask(task1);
-        String taskJson = gson.toJson(task2);
+    void testCreateCrossedTimeSubtask() throws IOException, InterruptedException {
+        Subtask subtask1 = new Subtask("Test 1", "Testing subtask 1", 90,
+                LocalDateTime.of(2025, 5, 18, 14, 0), 1);
+        Subtask subtask2 = new Subtask("Test 2", "Testing subtask 1", 30,
+                LocalDateTime.of(2025, 5, 18, 15, 0), 1);
+        taskManager.createSubtask(subtask1);
+        String taskJson = gson.toJson(subtask2);
 
         HttpClient client = HttpClient.newHttpClient();
         URI url = URI.create("http://localhost:8080/tasks");

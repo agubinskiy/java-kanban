@@ -22,7 +22,7 @@ public class PrioritizedHttpHandler extends BaseHttpHandler implements HttpHandl
         Endpoint endpoint = getEndpoint(path, method);
 
         switch (endpoint) {
-            case GET_PRIORITIZEDTASKS:
+            case GET_PRIORITIZED_TASKS:
                 handleGetPrioritized(httpExchange);
                 break;
             default:
@@ -35,7 +35,7 @@ public class PrioritizedHttpHandler extends BaseHttpHandler implements HttpHandl
 
         if (requestMethod.equals("GET")) {
             if (split.length == 2) {
-                return Endpoint.GET_PRIORITIZEDTASKS;
+                return Endpoint.GET_PRIORITIZED_TASKS;
             }
         }
         return Endpoint.UNKNOWN;

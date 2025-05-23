@@ -24,7 +24,10 @@ public class Task {
         this();
         this.name = name;
         this.description = description;
-        this.duration = Duration.ofMinutes(minutes);
+        if (minutes != 0)
+            this.duration = Duration.ofMinutes(minutes);
+        else
+            this.duration = null;
         this.startTime = startTime;
     }
 
@@ -33,7 +36,10 @@ public class Task {
         this();
         this.name = name;
         this.description = description;
-        this.duration = Duration.ofMinutes(minutes);
+        if (minutes != 0)
+            this.duration = Duration.ofMinutes(minutes);
+        else
+            this.duration = null;
     }
 
     //Конструктор для создания новой задачи без продолжительности
@@ -65,7 +71,10 @@ public class Task {
         this.name = name;
         this.description = description;
         this.taskId = taskId;
-        this.duration = Duration.ofMinutes(minutes);
+        if (minutes != 0)
+            this.duration = Duration.ofMinutes(minutes);
+        else
+            this.duration = null;
         this.startTime = startTime;
         this.status = status;
     }

@@ -32,7 +32,7 @@ public class EpicHttpHandler extends BaseHttpHandler implements HttpHandler {
             case GET_EPICS:
                 handleGetEpics(httpExchange);
                 break;
-            case GET_EPICSBUTASKS:
+            case GET_EPIC_SUBTASKS:
                 handleGetEpicSubtasks(httpExchange);
                 break;
             case POST_EPIC:
@@ -59,7 +59,7 @@ public class EpicHttpHandler extends BaseHttpHandler implements HttpHandler {
                 } else if (split.length == 3) {
                     return Endpoint.GET_EPIC;
                 } else if ((split.length == 4) && (split[3].equals("subtasks"))) {
-                    return Endpoint.GET_EPICSBUTASKS;
+                    return Endpoint.GET_EPIC_SUBTASKS;
                 }
             }
             case ("POST") -> {

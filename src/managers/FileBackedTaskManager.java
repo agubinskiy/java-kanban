@@ -78,8 +78,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case "TASK" -> new Task(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
                     split[TaskParameters.NAME.getIndex()],
                     split[TaskParameters.DESCRIPTION.getIndex()],
-                    Long.parseLong((split[TaskParameters.DURATION.getIndex()])),
-                    LocalDateTime.parse(split[TaskParameters.STARTTIME.getIndex()]),
+                    (split[TaskParameters.DURATION.getIndex()].equals("null") ?
+                            0 : Long.parseLong((split[TaskParameters.DURATION.getIndex()]))),
+                    (split[TaskParameters.STARTTIME.getIndex()].equals("null") ?
+                            null : LocalDateTime.parse(split[TaskParameters.STARTTIME.getIndex()])),
                     Status.valueOf(split[TaskParameters.STATUS.getIndex()]));
             case "EPIC" -> new Epic(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
                     split[TaskParameters.NAME.getIndex()],
@@ -87,8 +89,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case "SUBTASK" -> new Subtask(Integer.parseInt(split[TaskParameters.ID.getIndex()]),
                     split[TaskParameters.NAME.getIndex()],
                     split[TaskParameters.DESCRIPTION.getIndex()],
-                    Long.parseLong((split[TaskParameters.DURATION.getIndex()])),
-                    LocalDateTime.parse(split[TaskParameters.STARTTIME.getIndex()]),
+                    (split[TaskParameters.DURATION.getIndex()].equals("null") ?
+                            0 : Long.parseLong((split[TaskParameters.DURATION.getIndex()]))),
+                    (split[TaskParameters.STARTTIME.getIndex()].equals("null") ?
+                            null : LocalDateTime.parse(split[TaskParameters.STARTTIME.getIndex()])),
                     Integer.parseInt(split[TaskParameters.EPIC.getIndex()]),
                     Status.valueOf(split[TaskParameters.STATUS.getIndex()]));
             default -> null;
@@ -97,6 +101,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void addTask(Task task) {
         getTasks().put(task.getTaskId(), task);
+        if (task.getStartTime().isPresent() && task.getDuration().isPresent()) {
+            getPriorityTasks().add(task);
+        }
     }
 
     private void addEpic(Epic epic) {
@@ -110,6 +117,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             getSubtasks().put(subtask.getTaskId(), subtask); //Добавили подзадачу в список подзадач
             Epic epic = getEpics().get(epicId);
             epic.getChildTasksIds().add(subtask.getTaskId()); //Добавили подзадачу в список подзадач эпика
+        }
+        if (subtask.getStartTime().isPresent() && subtask.getDuration().isPresent()) {
+            getPriorityTasks().add(subtask);
         }
     }
 

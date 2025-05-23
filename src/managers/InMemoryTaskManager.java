@@ -34,7 +34,7 @@ public class InMemoryTaskManager implements TaskManager {
             int taskId = ++counter;
             task.setTaskId(taskId);
             tasks.put(taskId, task);
-            if (task.getStartTime().isPresent()) {
+            if (task.getStartTime().isPresent() && task.getDuration().isPresent()) {
                 priorityTasks.add(task);
             }
         } else {
@@ -64,7 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
                 counter--;
                 throw new NotFoundException("Не найдено эпика с id: " + epicId);
             }
-            if (subtask.getStartTime().isPresent()) {
+            if (subtask.getStartTime().isPresent() && subtask.getDuration().isPresent()) {
                 priorityTasks.add(subtask);
             }
         } else {
@@ -403,5 +403,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     public Map<Integer, Subtask> getSubtasks() {
         return subtasks;
+    }
+
+    public Set<Task> getPriorityTasks() {
+        return priorityTasks;
     }
 }
