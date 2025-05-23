@@ -29,8 +29,8 @@ public class HttpTaskServer {
 
     HttpServer httpServer = HttpServer.create();
 
-    public HttpTaskServer() throws IOException {
-        taskManager = Managers.getDefault();
+    public HttpTaskServer(TaskManager taskManager) throws IOException {
+        this.taskManager = taskManager;
     }
 
     public void start() throws IOException {
@@ -49,7 +49,7 @@ public class HttpTaskServer {
 
     public static void main(String[] args) throws IOException {
 
-        HttpTaskServer httpTaskServer = new HttpTaskServer();
+        HttpTaskServer httpTaskServer = new HttpTaskServer(Managers.getDefault());
         httpTaskServer.start();
     }
 

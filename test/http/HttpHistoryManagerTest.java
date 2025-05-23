@@ -31,9 +31,8 @@ public class HttpHistoryManagerTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        httpTaskServer = new HttpTaskServer();
-        httpTaskServer.taskManager = new InMemoryTaskManager();
-        taskManager = httpTaskServer.getTaskManager();
+        taskManager = new InMemoryTaskManager();
+        httpTaskServer = new HttpTaskServer(taskManager);
         gson = httpTaskServer.getGson();
         httpTaskServer.start();
     }
