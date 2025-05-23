@@ -117,7 +117,6 @@ public class EpicHttpHandler extends BaseHttpHandler implements HttpHandler {
             if (epic.getTaskId() == 0) {
                 taskManager.createEpic(epic);
                 sendTextCreate(httpExchange, "Эпик успешно создан");
-                System.out.println(epic);
             } else {
                 try {
                     taskManager.updateEpic(epic);
