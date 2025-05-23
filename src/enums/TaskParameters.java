@@ -1,4 +1,4 @@
-package tasks;
+package enums;
 
 public enum TaskParameters {
     ID(0),

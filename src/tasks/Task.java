@@ -1,5 +1,7 @@
 package tasks;
 
+import enums.Status;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,44 +15,54 @@ public class Task {
     private Duration duration;
     private LocalDateTime startTime;
 
+    public Task() {
+        status = Status.NEW;
+    }
+
     //Конструктор для создания новой задачи
     public Task(String name, String description, long minutes, LocalDateTime startTime) {
+        this();
         this.name = name;
         this.description = description;
-        this.duration = Duration.ofMinutes(minutes);
+        if (minutes != 0)
+            this.duration = Duration.ofMinutes(minutes);
+        else
+            this.duration = null;
         this.startTime = startTime;
-        status = Status.NEW;
     }
 
     //Конструктор для создания новой задачи без времени начала
     public Task(String name, String description, long minutes) {
+        this();
         this.name = name;
         this.description = description;
-        this.duration = Duration.ofMinutes(minutes);
-        status = Status.NEW;
+        if (minutes != 0)
+            this.duration = Duration.ofMinutes(minutes);
+        else
+            this.duration = null;
     }
 
     //Конструктор для создания новой задачи без продолжительности
     public Task(String name, String description, LocalDateTime startTime) {
+        this();
         this.name = name;
         this.description = description;
         this.startTime = startTime;
-        status = Status.NEW;
     }
 
     //Конструктор для создания эпика
     public Task(String name, String description) {
+        this();
         this.name = name;
         this.description = description;
-        status = Status.NEW;
     }
 
     //Конструктор для обновления эпика
     public Task(int taskId, String name, String description) {
+        this();
         this.name = name;
         this.description = description;
         this.taskId = taskId;
-        status = Status.NEW;
     }
 
     //Конструктор для обновления задачи
@@ -59,7 +71,10 @@ public class Task {
         this.name = name;
         this.description = description;
         this.taskId = taskId;
-        this.duration = Duration.ofMinutes(minutes);
+        if (minutes != 0)
+            this.duration = Duration.ofMinutes(minutes);
+        else
+            this.duration = null;
         this.startTime = startTime;
         this.status = status;
     }
@@ -127,5 +142,21 @@ public class Task {
 
     public void setTaskId(int taskId) {
         this.taskId = taskId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
