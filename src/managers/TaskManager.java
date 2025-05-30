@@ -1,8 +1,12 @@
+package managers;
+
+import exceptions.NotFoundException;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     void createTask(Task task);
@@ -17,7 +21,7 @@ public interface TaskManager {
 
     List<Subtask> getAllSubtasks();
 
-    Task getTask(int taskId);
+    Task getTask(int taskId) throws NotFoundException;
 
     Epic getEpic(int epicId);
 
@@ -46,4 +50,6 @@ public interface TaskManager {
     List<Subtask> getEpicSubtasks(Epic epic);
 
     List<Task> getHistory();
+
+    Set<Task> getPrioritizedTasks();
 }

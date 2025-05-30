@@ -1,0 +1,23 @@
+package enums;
+
+public enum Endpoint {
+    GET_TASK,
+    GET_TASKS,
+    POST_TASK,
+    DELETE_TASK,
+    DELETE_TASKS,
+    GET_SUBTASK,
+    GET_SUBTASKS,
+    POST_SUBTASK,
+    DELETE_SUBTASK,
+    DELETE_SUBTASKS,
+    GET_EPIC,
+    GET_EPIC_SUBTASKS,
+    GET_EPICS,
+    POST_EPIC,
+    DELETE_EPIC,
+    DELETE_EPICS,
+    GET_HISTORY,
+    GET_PRIORITIZED_TASKS,
+    UNKNOWN
+}

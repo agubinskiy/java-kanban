@@ -1,5 +1,7 @@
+import managers.InMemoryTaskManager;
+import managers.TaskManager;
 import tasks.Epic;
-import tasks.Status;
+import enums.Status;
 import tasks.Subtask;
 import tasks.Task;
 
@@ -12,8 +14,8 @@ public class Main {
         TaskManager taskManager = new InMemoryTaskManager();
 
         //Нужно для детального тестирования файлового менеджера, очень не хочется удалять
-        //TaskManager taskManager = Managers.getDefault();
-        //taskManager = FileBackedTaskManager.loadFromFile(new File(System.getProperty("user.home"),
+        //managers.TaskManager taskManager = managers.Managers.getDefault();
+        //taskManager = managers.FileBackedTaskManager.loadFromFile(new File(System.getProperty("user.home"),
         //        "testFile.txt"));
 
         Task task1 = new Task("Задача1", "Описание задачи1",
